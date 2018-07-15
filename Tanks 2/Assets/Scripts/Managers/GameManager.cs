@@ -13,15 +13,15 @@ public class GameManager : MonoBehaviour
     public Text m_MessageText;                  // Reference to the overlay Text to display winning text, etc.
     public GameObject m_TankPrefab;             // Reference to the prefab the players will control.
     public TankManager[] m_Tanks;               // A collection of managers for enabling and disabling different aspects of the tanks.
+    public TankColorPicker[] m_ColorPickers;	// A collection to the components that set tank colors to save colors in gamemanager.   
 
-        
     private int m_RoundNumber;                  // Which round the game is currently on.
     private WaitForSeconds m_StartWait;         // Used to have a delay whilst the round starts.
     private WaitForSeconds m_EndWait;           // Used to have a delay whilst the round or game ends.
     private TankManager m_RoundWinner;          // Reference to the winner of the current round.  Used to make an announcement of who won.
     private TankManager m_GameWinner;           // Reference to the winner of the game.  Used to make an announcement of who won.
 
-    private void Start()
+    public void BeginPlay()
     {
         // Create the delays so they only have to be made once.
         m_StartWait = new WaitForSeconds (m_StartDelay);
@@ -36,23 +36,8 @@ public class GameManager : MonoBehaviour
 
 	private void SpawnAllTanks()
     {
-		Color Player1Color = Color.red;
-		Color Player2Color = Color.blue;
-
-		//Get tank colors from the customisation menu
-		/*GameObject Player1ColorPicker = GameObject.Find( "ColorPicker1" );
-		GameObject Player2ColorPicker = GameObject.Find( "ColorPicker2" );
-
-		if ( Player1ColorPicker != null && Player2ColorPicker != null ) 
-		{
-			Player1Color = Player1ColorPicker.GetComponent<TankColorPicker>().m_PlayerColor;
-			Player2Color = Player2ColorPicker.GetComponent<TankColorPicker>().m_PlayerColor;
-		}
-		else 
-		{
-			Debug.Log("GameManager could not get color picker data!");
-		}*/
-
+		//Color Player1Color = Color.red;
+		//Color Player2Color = Color.blue;
 
 		// For all the tanks...
 		for (int i = 0; i < m_Tanks.Length; i++)
@@ -61,13 +46,13 @@ public class GameManager : MonoBehaviour
             m_Tanks[i].m_Instance =
                 Instantiate(m_TankPrefab, m_Tanks[i].m_SpawnPoint.position, m_Tanks[i].m_SpawnPoint.rotation) as GameObject;
             m_Tanks[i].m_PlayerNumber = i + 1;
-			m_Tanks[i].m_PlayerColor = ( i == 0 ? Player1Color : Player2Color );
-            m_Tanks[i].Setup();
+			m_Tanks[i].m_PlayerColor = m_ColorPickers[i].m_PlayerColor;
+			m_Tanks[i].Setup();
         }
-    }
+	}
 
 
-    private void SetCameraTargets()
+	private void SetCameraTargets()
     {
         // Create a collection of transforms the same size as the number of tanks.
         Transform[] targets = new Transform[m_Tanks.Length];

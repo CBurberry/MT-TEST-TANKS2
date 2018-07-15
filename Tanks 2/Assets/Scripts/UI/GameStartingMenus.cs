@@ -43,6 +43,8 @@ public class GameStartingMenus : MonoBehaviour {
 		m_PreviewTank1.SetActive( false );
 		m_PreviewTank2.SetActive( false );
 
+		m_GameManager.BeginPlay();
+
 		AudioListener.volume = 1f;
 		Time.timeScale = 1f;
 	}
